@@ -1,0 +1,20 @@
+### Example using environment variable (JetBrains / VS Code)
+@host = http://localhost:5173
+
+### Get root
+GET http://localhost:5173
+
+### Get all games
+GET {{host}}/games
+
+### Add game with env
+POST {{host}}/games
+Content-Type: application/json
+
+{
+  "id": "11111111-1111-1111-1111-111111111111",
+  "name": "Stardew Valley",
+  "genre": "Simulation",
+  "price": 14.99,
+  "releaseDate": "2016-02-26"
+}

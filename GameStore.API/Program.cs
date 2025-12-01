@@ -20,6 +20,7 @@ const string GetGameEndpointName = "GetGame";
 // ---------- DATA ----------
 
 GameStoreData data = new();
+
 // ---------- CONTROLLERS ----------
 
 #region GameController

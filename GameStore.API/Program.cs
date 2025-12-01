@@ -1,7 +1,10 @@
 using GameStore.API.Data;
 using GameStore.API.Models;
 using GameStore.API.Dtos;
-using GameStore.API.Features.Games.Constants;
+using GameStore.API.Features.Games.CreateGame;
+using GameStore.API.Features.Games.GetGame;
+using GameStore.API.Features.Games.GetGames;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -21,30 +24,9 @@ if (app.Environment.IsDevelopment())
 
 #region GameController
 app.MapGet("/", () => "Hello World!");
-app.MapGetGames(app.Services.GetRequiredService<GameStoreData>());
-app.MapGetGame(app.Services.GetRequiredService<GameStoreData>());
-
-app.MapPost("/games",
-    (GameStoreData data, CreateGameDto gameDto) =>
-    {
-        var genre = data.GetGenreById(gameDto.GenreId);
-        if (genre is null) return Results.BadRequest("Invalid genre");
-
-        var game = new Game()
-        {
-            Name = gameDto.Name,
-            Genre = genre,
-            Price = gameDto.Price,
-            ReleaseDate = gameDto.ReleaseDate,
-            Description = gameDto.Description
-        };
-
-        game.Id = Guid.NewGuid();
-        data.AddGame(game);
-
-        return Results.CreatedAtRoute(EndpointNames.GetGame, new { id = game.Id}, new GetGameDto(
-            game.Id, game.Name, game.Genre.Id, game.Price, game.ReleaseDate, game.Description));
-    }).WithParameterValidation();
+app.MapGetGames();
+app.MapGetGame();
+app.MapCreateGame();
 
 app.MapPut("/games/{id}",
     (Guid id, GameStoreData data, UpdateGameDto gameDto) =>

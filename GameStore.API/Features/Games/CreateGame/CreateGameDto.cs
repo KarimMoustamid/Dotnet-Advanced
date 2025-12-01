@@ -9,3 +9,15 @@ namespace GameStore.API.Dtos
         DateOnly ReleaseDate,
         [Required] [StringLength(500)] string Description);
 }
+
+/// <summary>
+/// DTO returned by endpoints with full game details.
+/// </summary>
+public record GameDetailsDto(
+    Guid Id,
+    string Name,
+    Guid GenreId,
+    decimal Price,
+    DateOnly ReleaseDate,
+    string Description
+);

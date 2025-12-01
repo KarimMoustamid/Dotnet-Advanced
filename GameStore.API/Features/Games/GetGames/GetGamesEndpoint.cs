@@ -1,12 +1,13 @@
-namespace GameStore.API.Dtos
+namespace GameStore.API.Features.Games.GetGames
 {
     using Data;
+    using Dtos;
 
     public static class GetGamesEndpoint
     {
-        public static void MapGetGames(this IEndpointRouteBuilder app, GameStoreData data)
+        public static void MapGetGames(this IEndpointRouteBuilder app)
         {
-            app.MapGet("/games", (GameStoreData data) => data.GetAllGames()
+            app.MapGet("/games", (GameStoreData store) => store.GetAllGames()
                 .Select(game => new GetGamesDto(
                     game.Id,
                     game.Name,

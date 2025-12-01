@@ -4,70 +4,76 @@ namespace GameStore.API.Data
 
     public class GameStoreData
     {
-
-         private readonly List<Genre> genres = new List<Genre>
+        // _lock is a dedicated synchronization object. We use it with the lock statement to ensure only one thread executes the protected block at a time.
+        private readonly object _lock = new();
+        private readonly List<Genre> _genres = new()
         {
             new Genre { Id = Guid.NewGuid(), Name = "RPG" },
             new Genre { Id = Guid.NewGuid(), Name = "Action RPG" },
             new Genre { Id = Guid.NewGuid(), Name = "Roguelike" }
         };
 
-        private readonly List<Game> games;
+        private readonly List<Game> _games;
 
         public GameStoreData()
         {
-           games = new List<Game>
-               {
-                   new Game
-                   {
-                       Id = Guid.NewGuid(),
-                       Name = "The Witcher 3: Wild Hunt",
-                       Genre = genres[0],
-                       Price = 39.99M,
-                       Description = "Open-world action role-playing game set in a dark fantasy world.",
-                       ReleaseDate = new DateOnly(2015, 5, 19)
-                   },
-                   new Game
-                   {
-                       Id = Guid.NewGuid(),
-                       Name = "Cyberpunk 2077",
-                       Genre = genres[1],
-                       Price = 59.99M,
-                       Description = "Futuristic open-world action RPG set in Night City.",
-                       ReleaseDate = new DateOnly(2020, 12, 10)
-                   },
-                   new Game
-                   {
-                       Id = Guid.NewGuid(),
-                       Name = "Hades",
-                       Genre = genres[2],
-                       Price = 24.99M,
-                       Description = "Roguelike dungeon crawler where players fight through the underworld.",
-                       ReleaseDate = new DateOnly(2020, 9, 17)
-                   }
-               };
+            _games = new List<Game>
+            {
+                new Game { Id = Guid.NewGuid(), Name = "The Witcher 3: Wild Hunt", Genre = _genres[0], Price = 39.99M, Description = "...", ReleaseDate = new DateOnly(2015,5,19) },
+                new Game { Id = Guid.NewGuid(), Name = "Cyberpunk 2077", Genre = _genres[1], Price = 59.99M, Description = "...", ReleaseDate = new DateOnly(2020,12,10) },
+                new Game { Id = Guid.NewGuid(), Name = "Hades", Genre = _genres[2], Price = 24.99M, Description = "...", ReleaseDate = new DateOnly(2020,9,17) }
+            };
         }
 
-        #region Games (CRUD operations)
+        // Readers return copies to avoid concurrent-enumeration problems.
+        public IReadOnlyList<Game> GetAllGames()
+        {
+            lock (_lock)
+            {
+                return _games.ToList();
+            }
+        }
 
-        public IEnumerable<Game> GetAllGames() => games;
-        public Game? GetGameById(Guid id) => games.Find(g => g.Id == id);
+        public Game? GetGameById(Guid id)
+        {
+            lock (_lock)
+            {
+                return _games.Find(g => g.Id == id);
+            }
+        }
 
         public void AddGame(Game game)
         {
-            game.Id = Guid.NewGuid();
-            games.Add(game);
+            lock (_lock)
+            {
+                game.Id = Guid.NewGuid();
+                _games.Add(game);
+            }
         }
 
-        public void RemoveGame(Guid id) => games.RemoveAll(g => g.Id == id);
+        public bool RemoveGame(Guid id)
+        {
+            lock (_lock)
+            {
+                int removed = _games.RemoveAll(g => g.Id == id);
+                return removed > 0;
+            }
+        }
 
-        #endregion
+        public IReadOnlyList<Genre> GetAllGenres()
+        {
+            lock (_lock)
+            {
+                return _genres.ToList();
+            }
+        }
 
-        #region Genres (reference data)
-
-        public IEnumerable<Genre> GetAllGenres() => genres;
-        public Genre? GetGenreById(Guid id) => genres.Find(g => g.Id == id);
-        #endregion
-
+        public Genre? GetGenreById(Guid id)
+        {
+            lock (_lock)
+            {
+                return _genres.Find(g => g.Id == id);
+            }
+        }
     }
 }

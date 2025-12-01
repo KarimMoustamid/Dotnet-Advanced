@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddSingleton<GameStoreData>();
 
 var app = builder.Build();
 
@@ -19,13 +20,13 @@ const string GetGameEndpointName = "GetGame";
 
 // ---------- DATA ----------
 
-GameStoreData data = new();
+// GameStoreData is registered in DI and will be provided to endpoint handlers as a parameter.
 
 // ---------- CONTROLLERS ----------
 
 #region GameController
 app.MapGet("/", () => "Hello World!");
-app.MapGet("/games", () => data.GetAllGames()
+app.MapGet("/games", (GameStoreData data) => data.GetAllGames()
     .Select(game => new GameSummaryDto(
     game.Id,
     game.Name,
@@ -35,7 +36,7 @@ app.MapGet("/games", () => data.GetAllGames()
 )));
 
 app.MapGet("/games/{id}",
-    (Guid id) =>
+    (Guid id, GameStoreData data) =>
     {
         Game? game = data.GetGameById(id);
         return game is null ? Results.NotFound() : Results.Ok(new GameDetailsDto(
@@ -43,7 +44,7 @@ app.MapGet("/games/{id}",
     }).WithName(GetGameEndpointName);
 
 app.MapPost("/games",
-    (CreateGameDto gameDto) =>
+    (GameStoreData data, CreateGameDto gameDto) =>
     {
         var genre = data.GetGenreById(gameDto.GenreId);
         if (genre is null) return Results.BadRequest("Invalid genre");
@@ -65,7 +66,7 @@ app.MapPost("/games",
     }).WithParameterValidation();
 
 app.MapPut("/games/{id}",
-    (Guid id, UpdateGameDto gameDto) =>
+    (Guid id, GameStoreData data, UpdateGameDto gameDto) =>
     {
         var genre = data.GetGenreById(gameDto.GenreId);
         if (genre is null) return Results.BadRequest("Invalid genre");
@@ -86,16 +87,17 @@ app.MapPut("/games/{id}",
     }).WithParameterValidation();
 
 app.MapDelete("/games/{id}",
-    (Guid id) =>
+    (Guid id, GameStoreData data) =>
     {
         data.RemoveGame(id);
+        return Results.NoContent();
     });
 
 #endregion
 
 #region GemreController
 
-app.MapGet("/genres", () => data.GetAllGenres().Select(g => new GenreDto(g.Id, g.Name)));
+app.MapGet("/genres", (GameStoreData data) => data.GetAllGenres().Select(g => new GenreDto(g.Id, g.Name)));
 
 #endregion
 

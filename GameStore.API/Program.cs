@@ -18,22 +18,11 @@ if (app.Environment.IsDevelopment())
 
 const string GetGameEndpointName = "GetGame";
 
-// ---------- DATA ----------
-
-// GameStoreData is registered in DI and will be provided to endpoint handlers as a parameter.
-
 // ---------- CONTROLLERS ----------
 
 #region GameController
 app.MapGet("/", () => "Hello World!");
-app.MapGet("/games", (GameStoreData data) => data.GetAllGames()
-    .Select(game => new GameSummaryDto(
-    game.Id,
-    game.Name,
-    game.Genre?.Name ?? string.Empty,
-    game.Price,
-    game.ReleaseDate
-)));
+app.MapGetGames(app.Services.GetRequiredService<GameStoreData>());
 
 app.MapGet("/games/{id}",
     (Guid id, GameStoreData data) =>

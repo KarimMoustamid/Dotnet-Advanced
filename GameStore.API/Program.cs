@@ -7,6 +7,7 @@ using GameStore.API.Features.Games.GetGames;
 using GameStore.API.Features.Games.UpdateGame;
 using GameStore.API.Features.Games.DeleteGame;
 using System.Linq;
+using GameStore.API.Features.Genres.GetGenres;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,9 +36,9 @@ app.MapDeleteGame();
 
 #endregion
 
-#region GemreController
+#region GenreController
 
-app.MapGet("/genres", (GameStoreData data) => data.GetAllGenres().Select(g => new GenreDto(g.Id, g.Name)));
+app.MapGetGenres();
 
 #endregion
 

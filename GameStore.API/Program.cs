@@ -21,24 +21,27 @@ List<Game> games = new List<Game>
     {
         Id = Guid.NewGuid(),
         Name = "The Witcher 3: Wild Hunt",
-        Genre = "RPG",
+        Genre = new Genre { Id = Guid.NewGuid(), Name = "RPG" },
         Price = 39.99M,
+        Description = "Open-world action role-playing game set in a dark fantasy world.",
         ReleaseDate = new DateOnly(2015, 5, 19)
     },
     new Game
     {
         Id = Guid.NewGuid(),
         Name = "Cyberpunk 2077",
-        Genre = "Action RPG",
+        Genre = new Genre { Id = Guid.NewGuid(), Name = "Action RPG" },
         Price = 59.99M,
+        Description = "Futuristic open-world action RPG set in Night City.",
         ReleaseDate = new DateOnly(2020, 12, 10)
     },
     new Game
     {
         Id = Guid.NewGuid(),
         Name = "Hades",
-        Genre = "Roguelike",
+        Genre = new Genre { Id = Guid.NewGuid(), Name = "Roguelike" },
         Price = 24.99M,
+        Description = "Roguelike dungeon crawler where players fight through the underworld.",
         ReleaseDate = new DateOnly(2020, 9, 17)
     }
 };
@@ -63,7 +66,7 @@ app.MapPost("/games",
         game.Id = Guid.NewGuid();
         games.Add(game);
         return Results.CreatedAtRoute(GetGameEndpointName, new { id = game.Id}, game);
-    });
+    }).WithParameterValidation();
 
 app.MapPut("/games/{id}",
     (Guid id, Game game) =>
@@ -78,8 +81,15 @@ app.MapPut("/games/{id}",
         existingGame.Genre = game.Genre;
         existingGame.Price = game.Price;
         existingGame.ReleaseDate = game.ReleaseDate;
+        existingGame.Description = game.Description;
 
         return Results.NoContent();
+    }).WithParameterValidation();
+
+app.MapDelete("/games/{id}",
+    (Guid id) =>
+    {
+        games.RemoveAll(g => g.Id == id);
     });
 
 

@@ -14,8 +14,9 @@ Content-Type: application/json
 {
   "id": "11111111-1111-1111-1111-111111111111",
   "name": "Stardew Valley",
-  "genre": "Simulation",
+  "genre": { "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", "name": "Simulation" },
   "price": 14.99,
+  "description": "Farming and life simulator.",
   "releaseDate": "2016-02-26"
 }
 
@@ -27,7 +28,21 @@ Content-Type: application/json
 {
   "id": "22222222-2222-2222-2222-222222222222",
   "name": "Resident Evil 4",
-  "genre": "Survival Horror",
+  "genre": { "id": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", "name": "Survival Horror" },
   "price": 29.99,
+  "description": "A survival horror game featuring Leon S. Kennedy on a mission to rescue the president's daughter.",
   "releaseDate": "2005-01-11"
+}
+
+### Update a game (PUT) - example
+PUT {{host}}/games/22222222-2222-2222-2222-222222222222
+Content-Type: application/json
+
+{
+  "id": "22222222-2222-2222-2222-222222222222",
+  "name": "Resident Evil 4 (Remake)",
+  "genre": { "id": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", "name": "Survival Horror" },
+  "price": 59.99,
+  "description": "Remake of the classic survival horror.",
+  "releaseDate": "2023-03-23"
 }

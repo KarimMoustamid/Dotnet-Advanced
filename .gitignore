@@ -1,34 +1,28 @@
-# Ignore build outputs
+# IDE directories
+.idea/
+
+# Visual Studio / Rider files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
 bin/
 obj/
 
 # User-specific files
-*.user
-*.suo
-*.userprefs
 *.DotSettings.user
 
-# IDEs
-.vs/
-.vscode/
-.idea/
-*.iml
-
-# macOS
+# OS files
 .DS_Store
 
-# Logs and DB
-*.log
-*.db
-
 # NuGet
-packages/
+.nuget/
+*.nupkg
 
-# Rider
-.idea/
+# Logs
+*.log
 
-# Rider caches
-.idea/*
-
-# Ignore published output
-publish/
+# Visual Studio Code
+.vscode/

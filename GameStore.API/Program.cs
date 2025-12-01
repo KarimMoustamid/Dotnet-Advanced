@@ -15,13 +15,23 @@ if (app.Environment.IsDevelopment())
 
 const string GetGameEndpointName = "GetGame";
 
+// ---------- DATA ----------
+
+#region DataModels
+List<Genre> genres = new List<Genre>
+{
+    new Genre { Id = Guid.NewGuid(), Name = "RPG" },
+    new Genre { Id = Guid.NewGuid(), Name = "Action RPG" },
+    new Genre { Id = Guid.NewGuid(), Name = "Roguelike" }
+};
+
 List<Game> games = new List<Game>
 {
     new Game
     {
         Id = Guid.NewGuid(),
         Name = "The Witcher 3: Wild Hunt",
-        Genre = new Genre { Id = Guid.NewGuid(), Name = "RPG" },
+        Genre = genres[0],
         Price = 39.99M,
         Description = "Open-world action role-playing game set in a dark fantasy world.",
         ReleaseDate = new DateOnly(2015, 5, 19)
@@ -30,7 +40,7 @@ List<Game> games = new List<Game>
     {
         Id = Guid.NewGuid(),
         Name = "Cyberpunk 2077",
-        Genre = new Genre { Id = Guid.NewGuid(), Name = "Action RPG" },
+        Genre = genres[1],
         Price = 59.99M,
         Description = "Futuristic open-world action RPG set in Night City.",
         ReleaseDate = new DateOnly(2020, 12, 10)
@@ -39,13 +49,18 @@ List<Game> games = new List<Game>
     {
         Id = Guid.NewGuid(),
         Name = "Hades",
-        Genre = new Genre { Id = Guid.NewGuid(), Name = "Roguelike" },
+        Genre = genres[2],
         Price = 24.99M,
         Description = "Roguelike dungeon crawler where players fight through the underworld.",
         ReleaseDate = new DateOnly(2020, 9, 17)
     }
 };
 
+#endregion
+
+// ---------- CONTROLLERS ----------
+
+#region GameController
 app.MapGet("/", () => "Hello World!");
 app.MapGet("/games", () => games.Select(game => new GameSummaryDto(
     game.Id,
@@ -95,9 +110,17 @@ app.MapDelete("/games/{id}",
         games.RemoveAll(g => g.Id == id);
     });
 
+#endregion
+
+#region GemreController
+
+app.MapGet("/genres", () => genres.Select(g => new GenreDto(g.Id, g.Name)));
+
+#endregion
 
 app.Run();
 
+// ---------- DTOs ----------
 public record GameDetailsDto(
     Guid Id,
     string Name,
@@ -114,3 +137,5 @@ public record GameSummaryDto(
     decimal Price,
     DateOnly ReleaseDate
     );
+
+public record GenreDto(Guid Id, string Name);

@@ -19,6 +19,7 @@ namespace GameStore.API.Features.Games.CreateGame
                     {
                         Name = gameDto.Name,
                         Genre = genre,
+                        GenreId = genre.Id,
                         Price = gameDto.Price,
                         ReleaseDate = gameDto.ReleaseDate,
                         Description = gameDto.Description

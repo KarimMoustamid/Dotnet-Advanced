@@ -19,9 +19,9 @@ namespace GameStore.API.Data
         {
             _games = new List<Game>
             {
-                new Game { Id = Guid.NewGuid(), Name = "The Witcher 3: Wild Hunt", Genre = _genres[0], Price = 39.99M, Description = "...", ReleaseDate = new DateOnly(2015,5,19) },
-                new Game { Id = Guid.NewGuid(), Name = "Cyberpunk 2077", Genre = _genres[1], Price = 59.99M, Description = "...", ReleaseDate = new DateOnly(2020,12,10) },
-                new Game { Id = Guid.NewGuid(), Name = "Hades", Genre = _genres[2], Price = 24.99M, Description = "...", ReleaseDate = new DateOnly(2020,9,17) }
+                new Game { Id = Guid.NewGuid(), Name = "The Witcher 3: Wild Hunt", Genre = _genres[0], GenreId = _genres[0].Id, Price = 39.99M, Description = "...", ReleaseDate = new DateOnly(2015,5,19) },
+                new Game { Id = Guid.NewGuid(), Name = "Cyberpunk 2077", Genre = _genres[1], GenreId = _genres[1].Id, Price = 59.99M, Description = "...", ReleaseDate = new DateOnly(2020,12,10) },
+                new Game { Id = Guid.NewGuid(), Name = "Hades", Genre = _genres[2], GenreId = _genres[2].Id, Price = 24.99M, Description = "...", ReleaseDate = new DateOnly(2020,9,17) }
             };
         }
 

@@ -9,23 +9,21 @@ namespace GameStore.API.Features.Games.UpdateGame
         public static void MapUpdateGame(this IEndpointRouteBuilder app)
         {
             app.MapPut("/{id}",
-                (Guid id, GameStoreData store, UpdateGameDto gameDto) =>
+                (Guid id, GameStoreContext dbContext, UpdateGameDto gameDto) =>
                 {
-                    var genre = store.GetGenreById(gameDto.GenreId);
-                    if (genre is null) return Results.BadRequest("Invalid genre");
-
-                    Game? existingGame = store.GetGameById(id);
+                    Game? existingGame = dbContext.Games.Find(id);
                     if (existingGame is null)
                     {
                         return Results.NotFound("Game not found");
                     }
 
                     existingGame.Name = gameDto.Name;
-                    existingGame.Genre = genre;
-                    existingGame.GenreId = genre.Id;
+                    existingGame.GenreId = gameDto.GenreId;
                     existingGame.Price = gameDto.Price;
                     existingGame.ReleaseDate = gameDto.ReleaseDate;
                     existingGame.Description = gameDto.Description;
+
+                    dbContext.SaveChanges();
 
                     return Results.NoContent();
                 }).WithParameterValidation();

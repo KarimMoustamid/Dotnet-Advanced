@@ -44,7 +44,7 @@ app.MapGames();
 app.MapGenres();
 #endregion
 
-app.InitializeDb();
+await app.InitializeDbAsync();
 
 
 

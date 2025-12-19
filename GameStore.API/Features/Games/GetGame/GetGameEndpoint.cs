@@ -12,9 +12,13 @@ namespace GameStore.API.Features.Games.GetGame
             app.MapGet("/{id}",
                 (Guid id, GameStoreContext dbContext) =>
                 {
-                    Game? game = dbContext.Games.Find(id);
-                    return game is null ? Results.NotFound() : Results.Ok(new GetGameDto(
-                        game.Id, game.Name, game.GenreId, game.Price, game.ReleaseDate, game.Description));
+                    Task<Game?> FindGameTask = dbContext.Games.FindAsync(id).AsTask();
+                    return FindGameTask.ContinueWith(task =>
+                    {
+                        Game? game = task.Result;
+                        return game is null ? Results.NotFound() : Results.Ok(new GetGameDto(
+                            game.Id, game.Name, game.GenreId, game.Price, game.ReleaseDate, game.Description));
+                    });
                 }).WithName(EndpointNames.GetGame);
         }
     }

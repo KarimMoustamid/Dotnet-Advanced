@@ -54,7 +54,9 @@ namespace GameStore.API.Data
                 dbContext.Genres.AddRange(
                     new Genre { Name = "RPG" },
                     new Genre { Name = "Action RPG" },
-                    new Genre { Name = "Roguelike" }
+                    new Genre { Name = "Roguelike" },
+                    new Genre { Name = "Strategy" },
+                    new Genre { Name = "Simulation" }
                     );
 
                 dbContext.SaveChanges();

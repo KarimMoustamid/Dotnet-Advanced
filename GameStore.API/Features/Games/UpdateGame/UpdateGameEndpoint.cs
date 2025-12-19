@@ -9,9 +9,9 @@ namespace GameStore.API.Features.Games.UpdateGame
         public static void MapUpdateGame(this IEndpointRouteBuilder app)
         {
             app.MapPut("/{id}",
-                (Guid id, GameStoreContext dbContext, UpdateGameDto gameDto) =>
+                async (Guid id, GameStoreContext dbContext, UpdateGameDto gameDto) =>
                 {
-                    Game? existingGame = dbContext.Games.Find(id);
+                    Game? existingGame = await dbContext.Games.FindAsync(id);
                     if (existingGame is null)
                     {
                         return Results.NotFound("Game not found");
@@ -23,7 +23,7 @@ namespace GameStore.API.Features.Games.UpdateGame
                     existingGame.ReleaseDate = gameDto.ReleaseDate;
                     existingGame.Description = gameDto.Description;
 
-                    dbContext.SaveChanges();
+                    await dbContext.SaveChangesAsync();
 
                     return Results.NoContent();
                 }).WithParameterValidation();

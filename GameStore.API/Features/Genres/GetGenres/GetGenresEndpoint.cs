@@ -9,8 +9,8 @@ namespace GameStore.API.Features.Genres.GetGenres
     {
         public static void MapGetGenres(this IEndpointRouteBuilder app)
         {
-            app.MapGet("/", (GameStoreContext dbContext) =>
-                dbContext.Genres.Select(g => new GenreDto(g.Id, g.Name)).AsNoTracking());
+            app.MapGet("/", async (GameStoreContext dbContext) =>
+                await dbContext.Genres.Select(g => new GenreDto(g.Id, g.Name)).AsNoTracking().ToListAsync());
         }
     }
 }

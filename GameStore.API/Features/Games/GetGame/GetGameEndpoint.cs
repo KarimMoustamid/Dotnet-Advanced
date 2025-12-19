@@ -10,15 +10,12 @@ namespace GameStore.API.Features.Games.GetGame
         public static void MapGetGame(this IEndpointRouteBuilder app)
         {
             app.MapGet("/{id}",
-                (Guid id, GameStoreContext dbContext) =>
+                async (Guid id, GameStoreContext dbContext) =>
                 {
-                    Task<Game?> FindGameTask = dbContext.Games.FindAsync(id).AsTask();
-                    return FindGameTask.ContinueWith(task =>
-                    {
-                        Game? game = task.Result;
-                        return game is null ? Results.NotFound() : Results.Ok(new GetGameDto(
-                            game.Id, game.Name, game.GenreId, game.Price, game.ReleaseDate, game.Description));
-                    });
+                    Game? game = await dbContext.Games.FindAsync(id);
+
+                    return game is null ? Results.NotFound() : Results.Ok(new GetGameDto(
+                        game.Id, game.Name, game.GenreId, game.Price, game.ReleaseDate, game.Description));
                 }).WithName(EndpointNames.GetGame);
         }
     }

@@ -8,14 +8,14 @@ namespace GameStore.API.Features.Games.GetGames
     {
         public static void MapGetGames(this IEndpointRouteBuilder app)
         {
-            app.MapGet("/", (GameStoreContext dbContext) => dbContext.Games.Include(game => game.Genre)
+            app.MapGet("/", async (GameStoreContext dbContext) => await dbContext.Games.Include(game => game.Genre)
                 .Select(game => new GetGamesDto(
                     game.Id,
                     game.Name,
                     game.Genre!.Name,
                     game.Price,
                     game.ReleaseDate
-                )).AsNoTracking());
+                )).AsNoTracking().ToListAsync());
         }
     }
 }

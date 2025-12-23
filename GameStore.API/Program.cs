@@ -45,8 +45,6 @@ app.MapGenres();
 #endregion
 
 await app.InitializeDbAsync();
-app.Logger.LogInformation(999,"Database Is Ready!");
-
 
 
 app.Run();

@@ -12,7 +12,8 @@ namespace GameStore.API.Data
         public static async Task InitializeDbAsync(this WebApplication app)
         {
            await app.MigrateDbAsync();
-            await app.SeedDataAsync();
+           await app.SeedDataAsync();
+           app.Logger.LogInformation(999,"Database Is Ready!");
         }
         /// <summary>
         /// Run pending EF Core migrations at application startup.

@@ -13,7 +13,7 @@ namespace GameStore.API.Data
         {
            await app.MigrateDbAsync();
            await app.SeedDataAsync();
-           app.Logger.LogTrace(999,"Database Is Ready!");
+           app.Logger.LogInformation(999,"Database Is Ready!");
         }
         /// <summary>
         /// Run pending EF Core migrations at an application startup.

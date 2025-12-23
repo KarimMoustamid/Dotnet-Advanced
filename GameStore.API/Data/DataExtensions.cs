@@ -13,10 +13,10 @@ namespace GameStore.API.Data
         {
            await app.MigrateDbAsync();
            await app.SeedDataAsync();
-           app.Logger.LogInformation(999,"Database Is Ready!");
+           app.Logger.LogTrace(999,"Database Is Ready!");
         }
         /// <summary>
-        /// Run pending EF Core migrations at application startup.
+        /// Run pending EF Core migrations at an application startup.
         /// </summary>
         /// <remarks>
         /// This method creates a short-lived DI scope because scoped services

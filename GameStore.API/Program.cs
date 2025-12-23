@@ -30,6 +30,7 @@ builder.Services.AddSqlite<GameStoreContext>(connectionString);
 //});
 
 builder.Services.AddOpenApi();
+builder.Services.AddHttpLogging(option => { });
 
 var app = builder.Build();
 
@@ -44,10 +45,10 @@ if (app.Environment.IsDevelopment())
 
 app.MapGet("/", () => "Hello World!");
 app.MapGames();
-
-app.UseMiddleware<RequestTimingMiddleware>();
-
 app.MapGenres();
+
+app.UseHttpLogging();
+app.UseMiddleware<RequestTimingMiddleware>();
 
 await app.InitializeDbAsync();
 

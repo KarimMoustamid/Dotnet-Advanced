@@ -2,6 +2,7 @@ using System.Diagnostics;
 using GameStore.API.Data;
 using GameStore.API.Features.Games;
 using GameStore.API.Features.Genres;
+using GameStore.API.shared.Timing;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -44,21 +45,7 @@ if (app.Environment.IsDevelopment())
 app.MapGet("/", () => "Hello World!");
 app.MapGames();
 
-app.Use(async (context, next) =>
-{
-    Stopwatch stopwatch = new Stopwatch();
-    try
-    {
-        stopwatch.Start();
-        await next(context);
-    }
-    finally
-    {
-        stopwatch.Stop();
-        var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
-        app.Logger.LogInformation("Request {requestMethod} {requestPath} completed in {elapsedMilliseconds}ms with status {status}", context.Request.Method, context.Request.Path, elapsedMilliseconds, context.Response.StatusCode);
-    }
-});
+app.UseMiddleware<RequestTimingMiddleware>();
 
 app.MapGenres();
 

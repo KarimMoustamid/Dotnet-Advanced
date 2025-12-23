@@ -3,6 +3,7 @@ using GameStore.API.Data;
 using GameStore.API.Features.Games;
 using GameStore.API.Features.Genres;
 using GameStore.API.shared.Timing;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -30,7 +31,11 @@ builder.Services.AddSqlite<GameStoreContext>(connectionString);
 //});
 
 builder.Services.AddOpenApi();
-builder.Services.AddHttpLogging(option => { });
+builder.Services.AddHttpLogging(option =>
+{
+    option.LoggingFields = HttpLoggingFields.All;
+    option.CombineLogs = true;
+});
 
 var app = builder.Build();
 

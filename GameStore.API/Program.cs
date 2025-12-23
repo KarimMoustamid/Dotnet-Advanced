@@ -3,6 +3,7 @@ using GameStore.API.Features.Games;
 using GameStore.API.Features.Genres;
 using Microsoft.EntityFrameworkCore;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("GameStore");

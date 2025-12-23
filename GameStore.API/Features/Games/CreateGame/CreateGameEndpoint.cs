@@ -10,7 +10,7 @@ namespace GameStore.API.Features.Games.CreateGame
         public static void MapCreateGame(this IEndpointRouteBuilder app)
         {
             app.MapPost("/",
-                async (GameStoreContext dbContext, CreateGameDto gameDto) =>
+                async (GameStoreContext dbContext, ILoggerFactory loggerFactory , CreateGameDto gameDto) =>
                 {
                     // Validate GenreId was provided
                     if (gameDto.GenreId == Guid.Empty)

@@ -10,7 +10,7 @@ namespace GameStore.API.Features.Games.CreateGame
         public static void MapCreateGame(this IEndpointRouteBuilder app)
         {
             app.MapPost("/",
-                async (GameStoreContext dbContext, ILoggerFactory loggerFactory , CreateGameDto gameDto) =>
+                async (GameStoreContext dbContext, ILogger<Program> logger , CreateGameDto gameDto) =>
                 {
                     // Validate GenreId was provided
                     if (gameDto.GenreId == Guid.Empty)
@@ -38,7 +38,6 @@ namespace GameStore.API.Features.Games.CreateGame
                     dbContext.Games.Add(game);
                    await dbContext.SaveChangesAsync();
 
-                   var logger = loggerFactory.CreateLogger("Games");
                    logger.LogInformation("Game created: {GameName} with price {GamePrice}", game.Name, game.Price);
 
 

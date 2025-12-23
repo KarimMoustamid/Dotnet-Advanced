@@ -38,6 +38,9 @@ namespace GameStore.API.Features.Games.CreateGame
                     dbContext.Games.Add(game);
                    await dbContext.SaveChangesAsync();
 
+                   var logger = loggerFactory.CreateLogger("Games");
+                   logger.LogInformation("Game created: {GameName} with price {GamePrice}", game.Name, game.Price);
+
 
                     return Results.CreatedAtRoute(EndpointNames.GetGame, new { id = game.Id}, new GameDetailsDto(
                         game.Id, game.Name, game.GenreId, game.Price, game.ReleaseDate, game.Description));

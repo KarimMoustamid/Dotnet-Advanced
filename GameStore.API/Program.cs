@@ -47,8 +47,8 @@ app.MapGet("/", () => "Hello World!");
 app.MapGames();
 app.MapGenres();
 
-app.UseHttpLogging();
 app.UseMiddleware<RequestTimingMiddleware>();
+app.UseHttpLogging();
 
 await app.InitializeDbAsync();
 

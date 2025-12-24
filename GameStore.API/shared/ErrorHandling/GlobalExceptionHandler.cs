@@ -1,0 +1,23 @@
+namespace GameStore.API.shared.ErrorHandling
+{
+    using System.Diagnostics;
+    using Microsoft.AspNetCore.Diagnostics;
+
+    public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
+    {
+        public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
+        {
+            var traceId = Activity.Current?.TraceId;
+
+            logger.LogError(exception, "Could not process a request on machine {Machine} , trace id {TraceId}", Environment.MachineName , traceId);
+
+            await Results.Problem(
+                title: "An error occurred while processing your request.",
+                statusCode: StatusCodes.Status500InternalServerError,
+                extensions: new Dictionary<string, object?> { { "traceId", traceId.ToString() } }
+            ).ExecuteAsync(httpContext);
+
+            return true;
+        }
+    }
+}

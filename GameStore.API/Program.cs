@@ -2,6 +2,7 @@ using System.Diagnostics;
 using GameStore.API.Data;
 using GameStore.API.Features.Games;
 using GameStore.API.Features.Genres;
+using GameStore.API.shared.ErrorHandling;
 using GameStore.API.shared.Timing;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Register Problem Details (RFC 7807) to convert exceptions and validation errors
 // into consistent, machine-readable error responses and map domain errors to HTTP status codes.
-builder.Services.AddProblemDetails();
+builder.Services.AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
+//builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 var connectionString = builder.Configuration.GetConnectionString("GameStore");
 

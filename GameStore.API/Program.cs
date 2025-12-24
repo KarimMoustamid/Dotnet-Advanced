@@ -9,6 +9,10 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Register Problem Details (RFC 7807) to convert exceptions and validation errors
+// into consistent, machine-readable error responses and map domain errors to HTTP status codes.
+builder.Services.AddProblemDetails();
+
 var connectionString = builder.Configuration.GetConnectionString("GameStore");
 
 /*
@@ -58,6 +62,21 @@ app.MapGenres();
 
 //app.UseMiddleware<RequestTimingMiddleware>();
 app.UseHttpLogging();
+
+if (!app.Environment.IsDevelopment())
+{
+    // Use the generic exception handler in non-development environments to avoid
+    // leaking stack traces or sensitive information to clients. The registered
+    // Problem Details middleware will format exceptions into RFC 7807-compliant
+    // responses (machine-readable error details and appropriate HTTP status codes).
+    app.UseExceptionHandler();
+}
+
+// Show simple, human-readable status pages for non-success responses.
+// Helpful for browsers and quick debugging; API clients still receive
+// RFC 7807 Problem Details responses when that middleware is active.
+app.UseStatusCodePages();
+
 
 await app.InitializeDbAsync();
 

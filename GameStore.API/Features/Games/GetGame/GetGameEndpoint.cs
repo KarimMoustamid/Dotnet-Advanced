@@ -1,5 +1,6 @@
 namespace GameStore.API.Features.Games.GetGame
 {
+    using System.Diagnostics;
     using Data;
     using Dtos;
     using Features.Games.Constants;
@@ -11,12 +12,25 @@ namespace GameStore.API.Features.Games.GetGame
         public static void MapGetGame(this IEndpointRouteBuilder app)
         {
             app.MapGet("/{id}",
-                async (Guid id, GameStoreContext dbContext) =>
+                async (Guid id, GameStoreContext dbContext, ILogger<Program> logger) =>
                 {
-                    Game? game = await FindGameAsync(dbContext, id);
+                    try
+                    {
+                        Game? game = await FindGameAsync(dbContext, id);
 
-                    return game is null ? Results.NotFound() : Results.Ok(new GetGameDto(
-                        game.Id, game.Name, game.GenreId, game.Price, game.ReleaseDate, game.Description));
+                        return game is null ? Results.NotFound() : Results.Ok(new GetGameDto(
+                            game.Id, game.Name, game.GenreId, game.Price, game.ReleaseDate, game.Description));
+                    }
+                    catch (Exception ex)
+                    {
+                        var traceId = Activity.Current?.TraceId;
+                        logger.LogError(ex, "Error getting game with id {Id} . Machine {} , trace id {TraceId}", id, Environment.MachineName , traceId);
+                        return Results.Problem(
+                            title: "An error occurred while processing your request.",
+                            statusCode: StatusCodes.Status500InternalServerError,
+                            extensions: new Dictionary<string, object?> { { "traceId", traceId.ToString() } }
+                            );
+                    }
                 }).WithName(EndpointNames.GetGame);
         }
 

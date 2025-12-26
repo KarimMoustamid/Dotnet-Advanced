@@ -12,7 +12,9 @@ namespace GameStore.API.Features.Games.GetGames
                 async (GameStoreContext dbContext, [AsParameters] GetGamesDto request) =>
                 {
                     var skipCount = (request.PageNumber - 1) * request.PageSize;
-                    var filteredGames = dbContext.Games.Where(game => game.Name.Contains(request.SearchTerm) || string.IsNullOrWhiteSpace(request.SearchTerm));
+                    //var filteredGames = dbContext.Games.Where(game => game.Name.Contains(request.SearchTerm, StringComparison.OrdinalIgnoreCase) || string.IsNullOrWhiteSpace(request.SearchTerm)); // System.InvalidOperationException
+
+                    var filteredGames = dbContext.Games.Where(game => EF.Functions.Like(game.Name, $"%{request.SearchTerm}%" ) || string.IsNullOrWhiteSpace(request.SearchTerm)); // System.InvalidOperationException
 
                     var gamesOnPage = await filteredGames
                         .OrderBy(game => game.Name)

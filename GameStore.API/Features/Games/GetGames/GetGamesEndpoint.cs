@@ -12,8 +12,9 @@ namespace GameStore.API.Features.Games.GetGames
                 async (GameStoreContext dbContext, [AsParameters] GetGamesDto request) =>
                 {
                     var skipCount = (request.PageNumber - 1) * request.PageSize;
+                    var filteredGames = dbContext.Games.Where(game => game.Name.Contains(request.SearchTerm) || string.IsNullOrWhiteSpace(request.SearchTerm));
 
-                    var gamesOnPage = await dbContext.Games
+                    var gamesOnPage = await filteredGames
                         .OrderBy(game => game.Name)
                         .Skip(skipCount)
                         .Take(request.PageSize)
@@ -27,7 +28,7 @@ namespace GameStore.API.Features.Games.GetGames
                         )).AsNoTracking()
                         .ToListAsync();
 
-                    var totalGames = await dbContext.Games.CountAsync();
+                    var totalGames = await filteredGames.CountAsync();
                     var totalPages = (int)Math.Ceiling(totalGames / (decimal)request.PageSize);
 
                     return new GamesPageDto(totalPages, gamesOnPage);

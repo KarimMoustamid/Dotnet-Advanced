@@ -1,6 +1,6 @@
 namespace GameStore.API.Dtos;
 
-public record GetGamesDto(int PageNumber = 1, int PageSize = 5);
+public record GetGamesDto(int PageNumber = 1, int PageSize = 5, string? SearchTerm = null);
 
 public record GamesPageDto(int TotalPages, List<GamesSummaryDto> Games);
 

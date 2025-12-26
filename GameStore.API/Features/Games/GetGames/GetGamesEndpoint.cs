@@ -14,6 +14,7 @@ namespace GameStore.API.Features.Games.GetGames
                     var skipCount = (request.PageNumber - 1) * request.PageSize;
 
                     await dbContext.Games
+                        .OrderBy(game => game.Name)
                         .Skip(skipCount)
                         .Take(request.PageSize)
                         .Include(game => game.Genre)

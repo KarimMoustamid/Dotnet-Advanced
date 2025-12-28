@@ -6,6 +6,7 @@ using GameStore.API.shared.ErrorHandling;
 using GameStore.API.shared.Timing;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -52,7 +53,10 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.MapOpenApi(); // openapi/v1.json
+    app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "GameStore.API v1"));
+    app.UseReDoc(options => options.SpecUrl("/openapi/v1.json"));
+    app.MapScalarApiReference();
 }
 
 // ---------- CONTROLLERS ----------

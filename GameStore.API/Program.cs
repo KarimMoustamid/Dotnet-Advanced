@@ -3,6 +3,7 @@ using GameStore.API.Data;
 using GameStore.API.Features.Games;
 using GameStore.API.Features.Genres;
 using GameStore.API.shared.ErrorHandling;
+using GameStore.API.shared.FileUpload;
 using GameStore.API.shared.Timing;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
@@ -47,6 +48,8 @@ builder.Services.AddHttpLogging(option =>
         | HttpLoggingFields.Duration;
     option.CombineLogs = true;
 });
+
+    builder.Services.AddHttpContextAccessor().AddSingleton<FileUploader>(); // This is just a fluent convenience on the same IServiceCollection !!
 
 var app = builder.Build();
 

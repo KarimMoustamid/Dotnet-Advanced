@@ -13,7 +13,7 @@ namespace GameStore.API.shared.FileUpload
 
             FileUploadResult result = new FileUploadResult();
 
-            // Validation
+            #region Validation
 
             if (file == null || file.Length == 0)
             {
@@ -22,7 +22,7 @@ namespace GameStore.API.shared.FileUpload
                return result;
             }
 
-            if (file.Length > 10 * 1024 * 1024) // 10 MB limit
+            if (file.Length > 10 * 1024 * 1024) // 10rMB limit
             {
                 result.IsSucess = false;
                 result.ErrorMessage = "File size exceeds the 10 MB limit.";
@@ -37,6 +37,8 @@ namespace GameStore.API.shared.FileUpload
                 result.ErrorMessage = "File type is not permitted.";
                 return result;
             }
+
+            #endregion
 
             // Upload logic
 

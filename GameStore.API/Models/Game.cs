@@ -12,5 +12,7 @@ namespace GameStore.API.Models
         public required decimal Price { get; set; }
         public required string Description { get; set; }
         public DateOnly ReleaseDate { get; set; }
+
+        public required string ImageUri { get; set; }
     }
 }

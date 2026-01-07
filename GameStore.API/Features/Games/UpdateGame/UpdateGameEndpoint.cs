@@ -56,7 +56,8 @@ namespace GameStore.API.Features.Games.UpdateGame
                     await dbContext.SaveChangesAsync();
 
                     return Results.NoContent();
-                }).WithParameterValidation();
+                }).WithParameterValidation()
+                .DisableAntiforgery();
         }
     }
 }

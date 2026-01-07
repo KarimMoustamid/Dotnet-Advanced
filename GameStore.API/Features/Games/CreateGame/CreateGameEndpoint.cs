@@ -99,7 +99,17 @@ namespace GameStore.API.Features.Games.CreateGame
 
                     return Results.CreatedAtRoute(EndpointNames.GetGame, new { id = game.Id }, new GameDetailsDto(
                         game.Id, game.Name, game.GenreId, game.Price, game.ReleaseDate, game.Description, game.ImageUri));
-                }).WithParameterValidation();
+                }).WithParameterValidation()
+                // JWTs in Authorization headers fulfill the header-based protection model: browsers do not automatically
+                // attach Authorization headers to cross-site requests, so CSRF risk is greatly reduced compared to
+                // cookie-based authentication. Disabling antiforgery for API endpoints that use header-based auth
+                // (Bearer JWT) is a common pattern, but it must be combined with the mitigations below:
+                // - Require authentication/authorization (JWT bearer) so only valid token holders may call the endpoint.
+                // - Configure CORS to allow only trusted origins for browser-based requests.
+                // - Validate uploaded content (size, allowed types, and preferably file signatures) and sanitize filenames.
+                // - Enforce server-side size limits and rate limiting to mitigate abuse/DoS.
+                // - Log uploads and upload failures for monitoring and incident diagnosis.
+                .DisableAntiforgery();
         }
     }
 }

@@ -26,7 +26,8 @@ namespace GameStore.API.Features.Games.GetGames
                             game.Name,
                             game.Genre!.Name,
                             game.Price,
-                            game.ReleaseDate
+                            game.ReleaseDate,
+                            game.ImageUri
                         )).AsNoTracking()
                         .ToListAsync();
 

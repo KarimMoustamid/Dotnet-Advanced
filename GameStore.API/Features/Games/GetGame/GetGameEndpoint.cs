@@ -17,7 +17,7 @@ namespace GameStore.API.Features.Games.GetGame
                         Game? game = await dbContext.Games.FindAsync(id);
 
                         return game is null ? Results.NotFound() : Results.Ok(new GetGameDto(
-                            game.Id, game.Name, game.GenreId, game.Price, game.ReleaseDate, game.Description));
+                            game.Id, game.Name, game.GenreId, game.Price, game.ReleaseDate, game.Description, game.ImageUri));
                 }).WithName(EndpointNames.GetGame);
         }
     }
